@@ -50,8 +50,8 @@ def run_tests():
     # 4. Test Classifier - SVM
     print("Testing OncoClassifier with SVM model...")
     svm_clf = orr.OncoClassifier(model_type="svm")
-    svm_preds = svm_clf.predict(df_aligned)
-    svm_probs = svm_clf.predict_proba(df_aligned)
+    svm_preds = svm_clf.predict(df_aligned, scaled_input=True)
+    svm_probs = svm_clf.predict_proba(df_aligned, scaled_input=True)
     
     assert len(svm_preds) == n_samples
     assert svm_probs.shape == (n_samples, 5) # LumA, LumB, Her2, Basal, Normal
@@ -61,8 +61,8 @@ def run_tests():
     # 5. Test Classifier - Logistic Regression
     print("Testing OncoClassifier with Logistic Regression model...")
     lr_clf = orr.OncoClassifier(model_type="lr")
-    lr_preds = lr_clf.predict(df_aligned)
-    lr_probs = lr_clf.predict_proba(df_aligned)
+    lr_preds = lr_clf.predict(df_aligned, scaled_input=True)
+    lr_probs = lr_clf.predict_proba(df_aligned, scaled_input=True)
     
     assert len(lr_preds) == n_samples
     assert lr_probs.shape == (n_samples, 5)

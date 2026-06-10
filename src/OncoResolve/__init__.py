@@ -4,7 +4,7 @@ from .classifier import OncoClassifier
 from .uniqueness import compute_cus
 from .prognosis import OncoPrognosis
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 __author__ = "Shubham Jha"
 
 __all__ = [

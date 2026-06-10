@@ -41,3 +41,6 @@ venv.bak/
 *.njsproj
 *.sln
 *.swp
+
+# Secrets
+.pypirc

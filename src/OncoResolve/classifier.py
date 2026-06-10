@@ -67,29 +67,53 @@ class OncoClassifier:
         self.model_.fit(X_arr, y_encoded)
         return self
 
-    def predict(self, X):
+    def predict(self, X, scaled_input=False):
         """
         Predicts PAM50 intrinsic subtypes for the input samples.
+
+        Parameters:
+        -----------
+        X : pd.DataFrame or np.ndarray
+            Input expression data.
+        scaled_input : bool, default=False
+            If True, assumes the input is already scaled (Z-score normalized).
+            Bypasses the internal StandardScaler in the pre-trained pipeline.
         """
         if self.model_ is None:
             raise RuntimeError("Model is not loaded or trained. Call fit() or load_pretrained() first.")
             
         X_arr = X.values if isinstance(X, pd.DataFrame) else X
-        preds = self.model_.predict(X_arr)
+        
+        if scaled_input and hasattr(self.model_, "named_steps") and "clf" in self.model_.named_steps:
+            preds = self.model_.named_steps["clf"].predict(X_arr)
+        else:
+            preds = self.model_.predict(X_arr)
         
         if self.label_encoder_ is not None:
             return self.label_encoder_.inverse_transform(preds)
         return preds
 
-    def predict_proba(self, X):
+    def predict_proba(self, X, scaled_input=False):
         """
         Predicts classification probabilities for each PAM50 subtype.
+
+        Parameters:
+        -----------
+        X : pd.DataFrame or np.ndarray
+            Input expression data.
+        scaled_input : bool, default=False
+            If True, assumes the input is already scaled (Z-score normalized).
+            Bypasses the internal StandardScaler in the pre-trained pipeline.
         """
         if self.model_ is None:
             raise RuntimeError("Model is not loaded or trained. Call fit() or load_pretrained() first.")
             
         X_arr = X.values if isinstance(X, pd.DataFrame) else X
-        probs = self.model_.predict_proba(X_arr)
+        
+        if scaled_input and hasattr(self.model_, "named_steps") and "clf" in self.model_.named_steps:
+            probs = self.model_.named_steps["clf"].predict_proba(X_arr)
+        else:
+            probs = self.model_.predict_proba(X_arr)
         
         if self.label_encoder_ is not None:
             classes = self.label_encoder_.classes_
